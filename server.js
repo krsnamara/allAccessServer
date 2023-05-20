@@ -93,7 +93,7 @@ app.get("/reviews", async (req, res) => {
     try {
         // send all reviews
         // if(req.user) {
-            res.json(await Reviews.find({uid: req.user.uid}));
+            res.json(await Reviews.find());
         // } else {
         //     res.json(await Reviews.find());
         // }
