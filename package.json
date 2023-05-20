@@ -9,5 +9,21 @@
     "firebase-admin": "^11.8.0",
     "mongoose": "^7.2.0",
     "morgan": "^1.10.0"
-  }
+  },
+  "name": "server",
+  "version": "1.0.0",
+  "main": "server.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/krsnamara/allAccessServer.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/krsnamara/allAccessServer/issues"
+  },
+  "homepage": "https://github.com/krsnamara/allAccessServer#readme",
+  "description": ""
 }
