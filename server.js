@@ -39,7 +39,7 @@ mongoose.connection
 mongoose.set('strictQuery', true);
 
 // Models
-const PeopleSchema = new mongoose.Schema({
+const ReviewsSchema = new mongoose.Schema({
     name: String,
     image: String,
     title: String,
@@ -48,7 +48,7 @@ const PeopleSchema = new mongoose.Schema({
     timestamps: true
 });
 
-const People = mongoose.model("People", PeopleSchema);
+const Reviews = mongoose.model("Reviews", ReviewsSchema);
 
 // MiddleWare //
 app.use(cors()); // to prevent cors errors, open access to all origins
@@ -88,14 +88,14 @@ app.get("/", (req, res) => {
     res.send("hello world");
 });
 
-// PEOPLE INDEX ROUTE
-app.get("/people", isAuthenticated, async (req, res) => {
+// REVIEWS INDEX ROUTE
+app.get("/reviews", isAuthenticated, async (req, res) => {
     try {
-        // send all people
+        // send all reviews
         // if(req.user) {
-            res.json(await People.find({uid: req.user.uid}));
+            res.json(await Reviews.find({uid: req.user.uid}));
         // } else {
-        //     res.json(await People.find());
+        //     res.json(await Reviews.find());
         // }
     } catch (error) {
         // send error
@@ -103,26 +103,26 @@ app.get("/people", isAuthenticated, async (req, res) => {
     }
 });
 
-// PEOPLE CREATE ROUTE
-app.post("/people", isAuthenticated, async (req, res) => {
+// REVIEWS CREATE ROUTE
+app.post("/reviews", isAuthenticated, async (req, res) => {
     try {
         // take authenticated user id and attach to request body
         req.body.uid = req.user.uid;
-        // send all people
-        const people = await People.create(req.body);
+        // send all reviews
+        const reviews = await Reviews.create(req.body);
 
-        res.json(people);
+        res.json(reviews);
     } catch (error) {
         //send error
         res.status(400).json(error);
     }
 });
 
-// PEOPLE DELETE ROUTE
-app.delete("/people/:id", async (req, res) => {
+// REVIEWS DELETE ROUTE
+app.delete("/reviews/:id", async (req, res) => {
     try {
-        // send all people
-        res.json(await People.findByIdAndRemove(req.params.id));
+        // send all reviews
+        res.json(await Reviews.findByIdAndRemove(req.params.id));
 
     } catch (error) {
         // send error
@@ -130,13 +130,13 @@ app.delete("/people/:id", async (req, res) => {
     }
 });
 
-// PEOPLE UPDATE ROUTE
-app.put("/people/:id", async (req, res) => {
+// REVIEWS UPDATE ROUTE
+app.put("/reviews/:id", async (req, res) => {
     try {
         req.body.uid = req.user.uid;
-        //send all people
+        //send all reviews
         res.json(
-            await People.findByIdAndUpdate(req.params.id, req.body, { new: true})
+            await Reviews.findByIdAndUpdate(req.params.id, req.body, { new: true})
         );
     } catch (error) {
         // send error
