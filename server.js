@@ -89,7 +89,7 @@ app.get("/", (req, res) => {
 });
 
 // REVIEWS INDEX ROUTE
-app.get("/reviews", isAuthenticated, async (req, res) => {
+app.get("/reviews", async (req, res) => {
     try {
         // send all reviews
         // if(req.user) {
@@ -104,7 +104,7 @@ app.get("/reviews", isAuthenticated, async (req, res) => {
 });
 
 // REVIEWS CREATE ROUTE
-app.post("/reviews", isAuthenticated, async (req, res) => {
+app.post("/reviews", async (req, res) => {
     try {
         // take authenticated user id and attach to request body
         req.body.uid = req.user.uid;
@@ -119,7 +119,7 @@ app.post("/reviews", isAuthenticated, async (req, res) => {
 });
 
 // REVIEWS DELETE ROUTE
-app.delete("/reviews/:id", async (req, res) => {
+app.delete("/reviews/:id", isAuthenticated, async (req, res) => {
     try {
         // send all reviews
         res.json(await Reviews.findByIdAndRemove(req.params.id));
@@ -131,7 +131,7 @@ app.delete("/reviews/:id", async (req, res) => {
 });
 
 // REVIEWS UPDATE ROUTE
-app.put("/reviews/:id", async (req, res) => {
+app.put("/reviews/:id", isAuthenticated, async (req, res) => {
     try {
         req.body.uid = req.user.uid;
         //send all reviews
