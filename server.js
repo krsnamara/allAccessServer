@@ -3,13 +3,15 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const morgan = require("morgan");
 const express = require('express');
+require("dotenv").config();
 const admin = require('firebase-admin');
 const { getAuth } = require('firebase-admin/auth');
-require("dotenv").config();
 
 const { PORT = 4000, MONGODB_URL, PRIVATE_KEY_ID, PRIVATE_KEY, CLIENT_ID } = process.env;
 
 const app = express();
+
+//Firebase Config
 
 admin.initializeApp({ 
     credential: admin.credential.cert({
@@ -39,16 +41,7 @@ mongoose.connection
 mongoose.set('strictQuery', true);
 
 // Models
-const ReviewsSchema = new mongoose.Schema({
-    name: String,
-    image: String,
-    title: String,
-    uid: String
-}, {
-    timestamps: true
-});
-
-const Reviews = mongoose.model("Reviews", ReviewsSchema);
+const Reviews = require('./models/reviews')
 
 // MiddleWare //
 app.use(cors()); // to prevent cors errors, open access to all origins
@@ -74,75 +67,16 @@ app.use( async function(req, res, next) {
            //in the middleware stack/pipeline/conveyerbelt
 })
 
-function isAuthenticated(req, res, next){
-    if(req.user) return next();
-    res.status(401).json({ 
-        message: 'You must login first'
-    });
-}
+// Controllers //
+const reviewsController = require('./controllers/reviews');
+app.use('/reviews', reviewsController);
 
-// Routes //
 
 // create a test route //
 app.get("/", (req, res) => {
     res.send("hello world");
 });
 
-// REVIEWS INDEX ROUTE
-app.get("/reviews", async (req, res) => {
-    try {
-        // send all reviews
-        // if(req.user) {
-            res.json(await Reviews.find());
-        // } else {
-        //     res.json(await Reviews.find());
-        // }
-    } catch (error) {
-        // send error
-        res.status(400).json(error);
-    }
-});
-
-// REVIEWS CREATE ROUTE
-app.post("/reviews", async (req, res) => {
-    try {
-        // take authenticated user id and attach to request body
-        req.body.uid = req.user.uid;
-        // send all reviews
-        const reviews = await Reviews.create(req.body);
-
-        res.json(reviews);
-    } catch (error) {
-        //send error
-        res.status(400).json(error);
-    }
-});
-
-// REVIEWS DELETE ROUTE
-app.delete("/reviews/:id", isAuthenticated, async (req, res) => {
-    try {
-        // send all reviews
-        res.json(await Reviews.findByIdAndRemove(req.params.id));
-
-    } catch (error) {
-        // send error
-        res.status(400).json(error);
-    }
-});
-
-// REVIEWS UPDATE ROUTE
-app.put("/reviews/:id", isAuthenticated, async (req, res) => {
-    try {
-        req.body.uid = req.user.uid;
-        //send all reviews
-        res.json(
-            await Reviews.findByIdAndUpdate(req.params.id, req.body, { new: true})
-        );
-    } catch (error) {
-        // send error
-        res.status(400).json(error);
-    }
-});
 
 // Listener //
 app.listen(PORT, () => console.log(`listening on PORT ${PORT}`));
