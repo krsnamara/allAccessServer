@@ -27,16 +27,6 @@ eventsRouter.get("/", async (req, res) => {
     }
 });
 
-// EVENTS SHOW ROUTE
-eventsRouter.get("/:id", async (req, res) => {
-    try {
-        // send all events
-            res.json(await Events.findById(req.params.id));
-    } catch (error) {
-        // send error
-        res.status(400).json(error);
-    }
-});
 
 // EVENTS CREATE ROUTE
 eventsRouter.post("/", async (req, res) => {
@@ -45,7 +35,7 @@ eventsRouter.post("/", async (req, res) => {
         req.body.uid = req.user.uid;
         // send all events
         const reviews = await Events.create(req.body);
-
+        
         res.json(reviews);
     } catch (error) {
         //send error
@@ -53,12 +43,13 @@ eventsRouter.post("/", async (req, res) => {
     }
 });
 
+
 // EVENTS DELETE ROUTE
 eventsRouter.delete("/:id", async (req, res) => {
     try {
         // send all events
         res.json(await Events.findByIdAndRemove(req.params.id));
-
+        
     } catch (error) {
         // send error
         res.status(400).json(error);
@@ -72,11 +63,21 @@ eventsRouter.put("/:id", async (req, res) => {
         //send all events
         res.json(
             await Events.findByIdAndUpdate(req.params.id, req.body, { new: true})
-        );
-    } catch (error) {
-        // send error
-        res.status(400).json(error);
-    }
-});
-
+            );
+        } catch (error) {
+            // send error
+            res.status(400).json(error);
+        }
+    });
+    
+    // EVENTS SHOW ROUTE
+    eventsRouter.get("/:id", async (req, res) => {
+        try {
+            // send all events
+                res.json(await Events.findById(req.params.id));
+        } catch (error) {
+            // send error
+            res.status(400).json(error);
+        }
+    });
 module.exports = eventsRouter;
