@@ -20,6 +20,7 @@ reviewsRouter.get("/", async (req, res) => {
     }
 });
 
+
 // REVIEWS CREATE ROUTE
 reviewsRouter.post("/", async (req, res) => {
     try {
@@ -27,7 +28,7 @@ reviewsRouter.post("/", async (req, res) => {
         req.body.uid = req.user.uid;
         // send all reviews
         const reviews = await Reviews.create(req.body);
-
+        
         res.json(reviews);
     } catch (error) {
         //send error
@@ -40,7 +41,7 @@ reviewsRouter.delete("/:id", async (req, res) => {
     try {
         // send all reviews
         res.json(await Reviews.findByIdAndRemove(req.params.id));
-
+        
     } catch (error) {
         // send error
         res.status(400).json(error);
@@ -54,11 +55,21 @@ reviewsRouter.put("/:id", async (req, res) => {
         //send all reviews
         res.json(
             await Reviews.findByIdAndUpdate(req.params.id, req.body, { new: true})
-        );
-    } catch (error) {
-        // send error
-        res.status(400).json(error);
-    }
-});
-
-module.exports = reviewsRouter;
+            );
+        } catch (error) {
+            // send error
+            res.status(400).json(error);
+        }
+    });
+    
+    // REVIEW SHOW ROUTE
+    reviewsRouter.get("/:id", async (req, res) => {
+        try {
+                res.json(await Reviews.findByIdreq.params.id());
+        } catch (error) {
+            // send error
+            res.status(400).json(error);
+        }
+    });
+    
+    module.exports = reviewsRouter;

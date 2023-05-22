@@ -48,9 +48,6 @@ mongoose.connection
 
 mongoose.set("strictQuery", true);
 
-// Models
-const Reviews = require("./models/reviews");
-
 // MiddleWare //
 app.use(cors()); // to prevent cors errors, open access to all origins
 app.use(morgan("dev")); // logging
