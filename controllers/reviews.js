@@ -36,7 +36,7 @@ reviewsRouter.post("/", async (req, res) => {
 });
 
 // REVIEWS DELETE ROUTE
-reviewsRouter.delete("/:id", isAuthenticated, async (req, res) => {
+reviewsRouter.delete("/:id", async (req, res) => {
     try {
         // send all reviews
         res.json(await Reviews.findByIdAndRemove(req.params.id));
@@ -48,7 +48,7 @@ reviewsRouter.delete("/:id", isAuthenticated, async (req, res) => {
 });
 
 // REVIEWS UPDATE ROUTE
-reviewsRouter.put("/:id", isAuthenticated, async (req, res) => {
+reviewsRouter.put("/:id", async (req, res) => {
     try {
         req.body.uid = req.user.uid;
         //send all reviews

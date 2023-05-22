@@ -1,6 +1,9 @@
+const express = require('express');
 const profilesCtrl = require('../controllers/profiles');
 
-// POST /profiles (create a profile -after sign up)
-router.post('/', profilesCtrl.create);
+const profilesRouter = express.Router();
 
-module.exports = router; 
+// POST /profiles (create a profile -after sign up)
+profilesRouter.post('/', profilesCtrl.create);
+
+module.exports = profilesRouter; 
