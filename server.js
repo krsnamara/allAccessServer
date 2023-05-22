@@ -72,8 +72,6 @@ app.use('/profiles', profilesController);
 const eventsController = require('./controllers/events');
 app.use('/events', eventsController);
 
-const profilesCtrl = require('./controllers/profiles');
-app.use('/create', profilesCtrl);
 
 // create a test route //
 app.get("/", (req, res) => {
