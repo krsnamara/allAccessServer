@@ -2,9 +2,9 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const ReviewsSchema = Schema({
-    name: String,
+    name: { type: String, required: true },
     image: String,
-    title: String,
+    title: { type: String, required: true },
     uid: String
 }, {
     timestamps: true
