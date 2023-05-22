@@ -89,5 +89,18 @@ module.exports = [
         categories: ['Arts & Culture', 'Classes & Workshops', 'Seasonal Occasions', 'Outdoor Activities', 'Sightseeing', 'Uniquie Experiences'], 
         foodNightlife: ['Restaurants', 'Cafes', 'Bars', 'Nightclubs', 'Coffee & Teas', 'Sweet Treats'],
         attractions: ['Hikes & Trails', 'Shopping', 'Live Entertainment', 'Gyms', 'Beauty & Spas', 'Local Parks', 'Amusement Parks'],
+    },
+    {
+        name: 'Dance Class',
+        eventType: 'Performance',
+        image: 'https://loremflickr.com/320/240',
+        description: 'Echo park magna commodo retro knausgaard. Slow-carb paleo kogi veniam intelligentsia lyft exercitation vape. Meditation thundercats officia ea. Cred semiotics actually, letterpress blue bottle exercitation ramps roof party.',
+        reservation: 'No',
+        website: 'https://www.linkedin.com/in/nikki-design/',
+        suitability: ['Vision-Impaired', 'Wheelchair-friendly', 'Deaf/Hard of Hearing'],
+        amenities: ['Ramps', 'Interpreters', 'Tactile ADA Signs', 'Dogs Allowed', 'Handicap Parking', 'Elevators'],
+        categories: ['Arts & Culture', 'Classes & Workshops', 'Seasonal Occasions', 'Outdoor Activities', 'Sightseeing', 'Uniquie Experiences'], 
+        foodNightlife: ['Restaurants', 'Cafes', 'Bars', 'Nightclubs', 'Coffee & Teas', 'Sweet Treats'],
+        attractions: ['Hikes & Trails', 'Shopping', 'Live Entertainment', 'Gyms', 'Beauty & Spas', 'Local Parks', 'Amusement Parks'],
     }
 ]
