@@ -27,6 +27,17 @@ eventsRouter.get("/", async (req, res) => {
     }
 });
 
+// EVENTS SHOW ROUTE
+eventsRouter.get("/:id", async (req, res) => {
+    try {
+        // send all events
+            res.json(await Events.findById(req.params.id));
+    } catch (error) {
+        // send error
+        res.status(400).json(error);
+    }
+});
+
 // EVENTS CREATE ROUTE
 eventsRouter.post("/", async (req, res) => {
     try {
