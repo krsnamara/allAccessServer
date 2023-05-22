@@ -43,7 +43,7 @@ eventsRouter.post("/", async (req, res) => {
 });
 
 // EVENTS DELETE ROUTE
-eventsRouter.delete("/:id", isAuthenticated, async (req, res) => {
+eventsRouter.delete("/:id", async (req, res) => {
     try {
         // send all events
         res.json(await Events.findByIdAndRemove(req.params.id));
@@ -55,7 +55,7 @@ eventsRouter.delete("/:id", isAuthenticated, async (req, res) => {
 });
 
 // EVENTS UPDATE ROUTE
-eventsRouter.put("/:id", isAuthenticated, async (req, res) => {
+eventsRouter.put("/:id", async (req, res) => {
     try {
         req.body.uid = req.user.uid;
         //send all events
