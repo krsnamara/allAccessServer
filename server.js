@@ -67,8 +67,6 @@ app.use( async function(req, res, next) {
 // Controllers //
 const reviewsController = require('./controllers/reviews');
 app.use('/reviews', reviewsController);
-const profilesController = require('./routes/profiles');
-app.use('/profiles', profilesController);
 const eventsController = require('./controllers/events');
 app.use('/events', eventsController);
 
