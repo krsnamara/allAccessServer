@@ -72,13 +72,12 @@ app.use(async function (req, res, next) {
 });
 
 // Controllers //
-const reviewsController = require("./controllers/reviews");
-app.use("/reviews", reviewsController);
-const eventsController = require("./controllers/events");
-app.use("/events", eventsController);
 
-const profilesCtrl = require("./controllers/profiles");
-app.use("/create", profilesCtrl);
+const reviewsController = require('./controllers/reviews');
+app.use('/reviews', reviewsController);
+const eventsController = require('./controllers/events');
+app.use('/events', eventsController);
+
 
 // create a test route //
 app.get("/", (req, res) => {
