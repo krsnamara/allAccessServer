@@ -20,6 +20,16 @@ reviewsRouter.get("/", async (req, res) => {
     }
 });
 
+// REVIEW SHOW ROUTE
+reviewsRouter.get("/:id", async (req, res) => {
+    try {
+            res.json(await Reviews.findByIdreq.params.id());
+    } catch (error) {
+        // send error
+        res.status(400).json(error);
+    }
+});
+
 // REVIEWS CREATE ROUTE
 reviewsRouter.post("/", async (req, res) => {
     try {
