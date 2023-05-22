@@ -4,13 +4,16 @@ const isAuthenticated = require('../utils/isAuth.js');
 const Events = require('../models/events.js')
 
 // Seed
-const seed = require('../data/eventSeed.js');
-eventsRouter.get('/seed', (req, res) => {
-    Events.deleteMany({}, (error, allevents) => {});
-
-    Events.create(seed, (error, data) => {
-        res.redirect('/events');
-    });
+const seed = require('../data/eventSeed.js')
+eventsRouter.get('/seed', async (req, res) => {
+    try {
+        await Events.deleteMany({});
+        const data = await Events.create(seed);
+        res.redirect('/');
+    } catch (error) {
+        console.log(error); // Log the error for debugging purposes
+        res.status(500).json({ error: 'Failed to seed data' });
+    }
 });
 
 // EVENTS INDEX ROUTE
