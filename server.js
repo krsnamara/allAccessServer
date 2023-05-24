@@ -3,6 +3,8 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const morgan = require("morgan");
 const express = require('express');
+const multer  = require('multer')
+const upload = multer({ dest: 'uploads/' })
 require("dotenv").config();
 const admin = require('firebase-admin');
 const { getAuth } = require('firebase-admin/auth');
@@ -45,6 +47,8 @@ app.use(cors()); // to prevent cors errors, open access to all origins
 app.use(morgan("dev")); // logging
 app.use(express.json()); // parse json bodies
 
+upload.single('image')
+
 // Authentication/Authorization Middleware
 app.use( async function(req, res, next) {
     try {
@@ -69,6 +73,8 @@ const reviewsController = require('./controllers/reviews');
 app.use('/reviews', reviewsController);
 const eventsController = require('./controllers/events');
 app.use('/events', eventsController);
+const imagesController = require('./controllers/images');
+app.use('/images', imagesController);
 
 
 // create a test route //

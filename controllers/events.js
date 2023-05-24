@@ -2,6 +2,7 @@ const express = require('express');
 const eventsRouter = express.Router();
 const isAuthenticated = require('../utils/isAuth.js');
 const Events = require('../models/events.js')
+const data = await Events.find();
 
 // Seed
 const seed = require('../data/eventSeed.js')
@@ -20,7 +21,7 @@ eventsRouter.get('/seed', async (req, res) => {
 eventsRouter.get("/", async (req, res) => {
     try {
         // send all events
-            res.json(await Events.find());
+            res.json(data);
     } catch (error) {
         // send error
         res.status(400).json(error);
