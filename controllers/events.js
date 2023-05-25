@@ -2,7 +2,8 @@ const express = require('express');
 const eventsRouter = express.Router();
 const isAuthenticated = require('../utils/isAuth.js');
 const Events = require('../models/events.js')
-const data = await Events.find();
+//this next line of code was a suggestion but it throws and error
+// const data = await Events.find();
 
 // Seed
 const seed = require('../data/eventSeed.js')
