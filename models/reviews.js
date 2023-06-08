@@ -1,14 +1,17 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const ReviewsSchema = Schema({
+const ReviewsSchema = Schema(
+  {
     name: { type: String, required: true },
-    image: String,
-    title: { type: String, required: true },
-    uid: String
-}, {
-    timestamps: true
-});
+    comment: { type: String, required: true },
+    imageName: String,
+    uid: String,
+  },
+  {
+    timestamps: true,
+  }
+);
 
 const Reviews = mongoose.model("Reviews", ReviewsSchema);
 

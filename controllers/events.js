@@ -5,9 +5,8 @@ const sharp = require("sharp");
 const eventsRouter = express.Router();
 const isAuthenticated = require("../utils/isAuth.js");
 const Events = require("../models/events.js");
-const app = express();
 
-app.use((req, res, next) => {
+eventsRouter.use((req, res, next) => {
   res.setHeader(
     "Access-Control-Allow-Origin",
     "http://localhost:3000",
@@ -60,7 +59,7 @@ eventsRouter.get("/seed", async (req, res) => {
 // EVENTS INDEX ROUTE
 eventsRouter.get("/", async (req, res) => {
   try {
-    const posts = await Images.findMany({ orderBy: { id: "desc" } });
+    const posts = await Events.find({ orderBy: { id: "desc" } });
 
     for (const post of posts) {
       post.imageUrl = getSignedUrl({
