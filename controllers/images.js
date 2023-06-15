@@ -40,7 +40,11 @@ const upload = multer({ storage: storage });
 
 // cors middleware to allow access to the api from the frontend
 imagesRouter.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "no-cors"); // Replace with your frontend URL
+  res.setHeader(
+    "Access-Control-Allow-Origin",
+    "https://all-access-client.vercel.app"
+  );
+  // Replace with your frontend URL
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   next();
