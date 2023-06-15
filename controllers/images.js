@@ -42,7 +42,7 @@ const upload = multer({ storage: storage });
 imagesRouter.use((req, res, next) => {
   res.setHeader(
     "Access-Control-Allow-Origin",
-    "http://localhost:3000, https://all-access-client.vercel.app/images"
+    "https://all-access-client.vercel.app/images"
   ); // Replace with your frontend URL
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
