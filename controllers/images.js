@@ -39,23 +39,23 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 // cors middleware to allow access to the api from the frontend
-imagesRouter.use((req, res, next) => {
-  res.setHeader(
-    "Access-Control-Allow-Origin",
-    "https://all-access-client.vercel.app"
-  );
-  // Replace with your frontend URL
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-  next();
-});
+// imagesRouter.use((req, res, next) => {
+//   res.setHeader(
+//     "Access-Control-Allow-Origin",
+//     "https://all-access-client.vercel.app"
+//   );
+//   // Replace with your frontend URL
+//   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+//   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+//   next();
+// });
 
 // TODO: Add authentication middleware
 // TODO: Add seed data routes to repopulate the database
 
 imagesRouter.get("/", async (req, res) => {
   try {
-    const images = await Images.find().sort({ createdAt: -1 });
+    const images = await Images.find().sort({ createdAt: 1 });
 
     const updatedImages = [];
     for (const image of images) {
@@ -81,7 +81,7 @@ imagesRouter.get("/", async (req, res) => {
 imagesRouter.post("/", upload.single("image"), async (req, res) => {
   try {
     const buffer = await sharp(req.file.buffer)
-      .resize({ height: 1920, width: 1080, fit: "contain" })
+      .resize({ height: 166, width: 220, fit: "cover" })
       .toBuffer();
 
     const imageName = randomImageName();
