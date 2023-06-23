@@ -98,6 +98,7 @@ imagesRouter.post("/", upload.single("image"), async (req, res) => {
 
     const post = new Images({
       name: req.body.name,
+      eventType: req.body.eventType,
       imageName: imageName,
       description: req.body.description,
       address: req.body.address,
