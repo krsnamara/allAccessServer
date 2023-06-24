@@ -79,6 +79,8 @@ const eventsController = require("./controllers/events");
 app.use("/events", eventsController);
 const imagesController = require("./controllers/images");
 app.use("/images", imagesController);
+const searchController = require("./controllers/search");
+app.use("/search", searchController);
 
 // create a test route //
 app.get("/", (req, res) => {
