@@ -150,4 +150,30 @@ imagesRouter.delete("/:id", async (req, res) => {
   }
 });
 
+imagesRouter.put("/:id", async (req, res) => {
+  try {
+    const id = req.params.id.toString();
+
+    const post = await Images.findById(id);
+    if (!post) {
+      res.status(404).send({ message: "Post not found" });
+      return;
+    }
+
+    const params = {
+      Bucket: bucketName,
+      Key: post.imageName,
+    };
+    const command = new PutObjectCommand(params);
+    await s3.send(command);
+
+    await Images.findByIdAndUpdate(id);
+
+    res.send(post);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: "Internal Server Error" });
+  }
+});
+
 module.exports = imagesRouter;
