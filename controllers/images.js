@@ -81,7 +81,7 @@ imagesRouter.get("/", async (req, res) => {
 imagesRouter.post("/", upload.single("image"), async (req, res) => {
   try {
     const buffer = await sharp(req.file.buffer)
-      .resize({ height: 166, width: 220, fit: "cover" })
+      .resize({ height: 529, width: 700 })
       .toBuffer();
 
     const imageName = randomImageName();
