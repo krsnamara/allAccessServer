@@ -27,7 +27,9 @@ searchRouter.get("/events", async (req, res) => {
       { name: { $regex: keyword, $options: "i" } },
       { eventType: { $regex: keyword, $options: "i" } },
       { address: { $regex: keyword, $options: "i" } },
-      { description: { $regex: keyword, $options: "i" } },
+      { suitability: { $regex: keyword, $options: "i" } },
+      { amenities: { $regex: keyword, $options: "i" } },
+      { categories: { $regex: keyword, $options: "i" } },
     ];
 
   try {
