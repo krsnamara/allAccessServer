@@ -38,18 +38,6 @@ const s3 = new S3Client({
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-// cors middleware to allow access to the api from the frontend
-// imagesRouter.use((req, res, next) => {
-//   res.setHeader(
-//     "Access-Control-Allow-Origin",
-//     "https://all-access-client.vercel.app"
-//   );
-//   // Replace with your frontend URL
-//   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-//   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-//   next();
-// });
-
 // TODO: Add authentication middleware
 // TODO: Add seed data routes to repopulate the database
 
@@ -150,26 +138,82 @@ imagesRouter.delete("/:id", async (req, res) => {
   }
 });
 
-imagesRouter.put("/:id", async (req, res) => {
+imagesRouter.put("/:id", upload.single("image"), async (req, res) => {
   try {
     const id = req.params.id.toString();
 
-    const post = await Images.findById(id);
-    if (!post) {
-      res.status(404).send({ message: "Post not found" });
+    const image = await Images.findById(id);
+    if (!image) {
+      res.status(404).send({ message: "Image not found" });
       return;
     }
 
-    const params = {
-      Bucket: bucketName,
-      Key: post.imageName,
-    };
-    const command = new PutObjectCommand(params);
-    await s3.send(command);
+    if (req.file) {
+      // If a new image file is provided, update the image in the S3 bucket
+      const buffer = await sharp(req.file.buffer)
+        .resize({ height: 529, width: 700 })
+        .toBuffer();
 
-    await Images.findByIdAndUpdate(id);
+      const params = {
+        Bucket: bucketName,
+        Key: image.imageName,
+        Body: buffer,
+        ContentType: req.file.mimetype,
+      };
 
-    res.send(post);
+      const command = new PutObjectCommand(params);
+      await s3.send(command);
+    }
+
+    // Update other fields of the image object if needed
+    image.name = req.body.name || image.name;
+    image.eventType = req.body.eventType || image.eventType;
+    image.description = req.body.description || image.description;
+    image.address = req.body.address || image.address;
+    image.reservation = req.body.reservation || image.reservation;
+    image.website = req.body.website || image.website;
+    image.suitability = req.body.suitability || image.suitability;
+    image.amenities = req.body.amenities || image.amenities;
+    image.categories = req.body.categories || image.categories;
+    image.foodNightlife = req.body.foodNightlife || image.foodNightlife;
+    image.attractions = req.body.attractions || image.attractions;
+
+    await image.save();
+
+    const updatedImage = image.toObject(); // Convert Mongoose document to plain JavaScript object
+    updatedImage.imageUrl = getSignedUrl({
+      url: "https://d43rby6106out.cloudfront.net/" + image.imageName,
+      dateLessThan: new Date(Date.now() + 1000 * 60 * 60 * 24),
+      privateKey: process.env.CLOUDFRONT_PRIVATE_KEY,
+      keyPairId: process.env.CLOUDFRONT_KEY_PAIR_ID,
+    });
+
+    res.send(updatedImage);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: "Internal Server Error" });
+  }
+});
+
+imagesRouter.get("/:id", async (req, res) => {
+  try {
+    const id = req.params.id.toString();
+
+    const image = await Images.findById(id);
+    if (!image) {
+      res.status(404).send({ message: "Image not found" });
+      return;
+    }
+
+    const imageObject = image.toObject(); // Convert Mongoose document to plain JavaScript object
+    imageObject.imageUrl = getSignedUrl({
+      url: "https://d43rby6106out.cloudfront.net/" + image.imageName,
+      dateLessThan: new Date(Date.now() + 1000 * 60 * 60 * 24),
+      privateKey: process.env.CLOUDFRONT_PRIVATE_KEY,
+      keyPairId: process.env.CLOUDFRONT_KEY_PAIR_ID,
+    });
+
+    res.send(imageObject);
   } catch (error) {
     console.error(error);
     res.status(500).send({ message: "Internal Server Error" });
