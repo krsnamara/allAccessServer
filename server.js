@@ -3,9 +3,9 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const morgan = require("morgan");
 const express = require("express");
-require("dotenv").config();
 const admin = require("firebase-admin");
 const { getAuth } = require("firebase-admin/auth");
+require("dotenv").config();
 
 const {
   PORT = 4000,

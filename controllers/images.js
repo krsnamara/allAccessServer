@@ -2,6 +2,7 @@
 const express = require("express");
 const imagesRouter = express.Router();
 const Images = require("../models/images.js");
+const isAuthenticated = require("../services/isAuth.js");
 
 // Specific imports for image upload
 const multer = require("multer");
@@ -38,26 +39,48 @@ const s3 = new S3Client({
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
+const Auth = isAuthenticated;
+
 // TODO: Add authentication middleware
 // TODO: Add seed data routes to repopulate the database
 
-imagesRouter.get("/", async (req, res) => {
+imagesRouter.get("/", Auth, async (req, res) => {
   try {
-    const images = await Images.find().sort({ createdAt: 1 });
-
-    const updatedImages = [];
-    for (const image of images) {
-      const imageObject = image.toObject(); // Convert Mongoose document to plain JavaScript object
-      imageObject.imageUrl = getSignedUrl({
-        url: "https://d43rby6106out.cloudfront.net/" + image.imageName,
-        dateLessThan: new Date(Date.now() + 1000 * 60 * 60 * 24),
-        privateKey: process.env.CLOUDFRONT_PRIVATE_KEY,
-        keyPairId: process.env.CLOUDFRONT_KEY_PAIR_ID,
+    if (req.user) {
+      const images = await Images.find({ uid: req.user.uid }).sort({
+        createdAt: 1,
       });
-      updatedImages.push(imageObject); // Push the updated imageObject to the new array
-    }
 
-    res.send(updatedImages); // Send the updatedImages array to the frontend
+      const updatedImages = [];
+      for (const image of images) {
+        const imageObject = image.toObject(); // Convert Mongoose document to plain JavaScript object
+        imageObject.imageUrl = getSignedUrl({
+          url: "https://d43rby6106out.cloudfront.net/" + image.imageName,
+          dateLessThan: new Date(Date.now() + 1000 * 60 * 60 * 24),
+          privateKey: process.env.CLOUDFRONT_PRIVATE_KEY,
+          keyPairId: process.env.CLOUDFRONT_KEY_PAIR_ID,
+        });
+        updatedImages.push(imageObject); // Push the updated imageObject to the new array
+      }
+
+      res.send(updatedImages); // Send the updatedImages array to the frontend
+    } else {
+      const images = await Images.find().sort({ createdAt: 1 });
+
+      const updatedImages = [];
+      for (const image of images) {
+        const imageObject = image.toObject(); // Convert Mongoose document to plain JavaScript object
+        imageObject.imageUrl = getSignedUrl({
+          url: "https://d43rby6106out.cloudfront.net/" + image.imageName,
+          dateLessThan: new Date(Date.now() + 1000 * 60 * 60 * 24),
+          privateKey: process.env.CLOUDFRONT_PRIVATE_KEY,
+          keyPairId: process.env.CLOUDFRONT_KEY_PAIR_ID,
+        });
+        updatedImages.push(imageObject); // Push the updated imageObject to the new array
+      }
+
+      res.send(updatedImages);
+    }
   } catch (error) {
     console.error(error);
     res.status(500).send({ message: "Internal Server Error" });
@@ -68,6 +91,7 @@ imagesRouter.get("/", async (req, res) => {
 
 imagesRouter.post("/", upload.single("image"), async (req, res) => {
   try {
+    req.body.uid = req.user.uid;
     const buffer = await sharp(req.file.buffer)
       .resize({ height: 529, width: 700 })
       .toBuffer();
@@ -84,7 +108,7 @@ imagesRouter.post("/", upload.single("image"), async (req, res) => {
     const command = new PutObjectCommand(params);
     await s3.send(command);
 
-    const post = new Images({
+    const event = new Images({
       name: req.body.name,
       eventType: req.body.eventType,
       imageName: imageName,
@@ -101,12 +125,12 @@ imagesRouter.post("/", upload.single("image"), async (req, res) => {
       // Add other fields as needed
     });
 
-    await post.save();
+    await event.save();
 
-    res.send(post);
+    res.send(event);
   } catch (error) {
     console.error(error);
-    res.status(500).send({ message: "Internal Server Error" });
+    res.status(500).send({ message: "Internal Server Error On Post Method" });
   }
 });
 
@@ -138,8 +162,9 @@ imagesRouter.delete("/:id", async (req, res) => {
   }
 });
 
-imagesRouter.put("/:id", upload.single("image"), async (req, res) => {
+imagesRouter.put("/:id", Auth, upload.single("image"), async (req, res) => {
   try {
+    req.body.uid = req.user.uid;
     const id = req.params.id.toString();
 
     const image = await Images.findById(id);
