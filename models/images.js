@@ -6,6 +6,8 @@ const ImagesSchema = new mongoose.Schema(
     eventType: { type: String, required: true },
     imageName: { type: String },
     address: { type: String, required: true },
+    latitude: { type: Number },
+    longitude: { type: Number },
     description: { type: String, required: true },
     reservation: { type: String, required: true },
     website: { type: String, required: true },
