@@ -7,13 +7,13 @@ require("dotenv").config();
 const admin = require("firebase-admin");
 const { getAuth } = require("firebase-admin/auth");
 
-const {
-  PORT = 4000,
-  MONGODB_URL,
-  PRIVATE_KEY_ID,
-  PRIVATE_KEY,
-  CLIENT_ID,
-} = process.env;
+// const {
+//   PORT = 4000,
+//   MONGODB_URL,
+//   PRIVATE_KEY_ID,
+//   PRIVATE_KEY,
+//   CLIENT_ID,
+// } = process.env;
 
 const app = express();
 
@@ -23,11 +23,11 @@ admin.initializeApp({
   credential: admin.credential.cert({
     type: "service_account",
     project_id: "react-peoples-service-app",
-    private_key_id: PRIVATE_KEY_ID,
-    private_key: PRIVATE_KEY.replace("\n", ""),
+    private_key_id: process.env.PRIVATE_KEY_ID,
+    private_key: process.env.PRIVATE_KEY.replace("\n", ""),
     client_email:
       "firebase-adminsdk-5pruc@react-peoples-service-app.iam.gserviceaccount.com",
-    client_id: CLIENT_ID,
+    client_id: process.env.CLIENT_ID,
     auth_uri: "https://accounts.google.com/o/oauth2/auth",
     token_uri: "https://oauth2.googleapis.com/token",
     auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
@@ -39,7 +39,7 @@ admin.initializeApp({
 // Database Connection //
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(MONGODB_URL);
+    const conn = await mongoose.connect(process.env.MONGODB_URL);
     console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
     console.log(error);
@@ -98,4 +98,6 @@ app.get("/", (req, res) => {
 });
 
 // Listener //
-app.listen(PORT, () => console.log(`listening on PORT ${PORT}`));
+app.listen(process.env.PORT, () =>
+  console.log(`listening on PORT ${process.env.PORT}`)
+);
