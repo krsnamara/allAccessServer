@@ -37,8 +37,18 @@ admin.initializeApp({
 });
 
 // Database Connection //
+const connectDB = async () => {
+  try {
+    const conn = await mongoose.connect(MONGODB_URL);
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
+  } catch (error) {
+    console.log(error);
+    process.exit(1);
+  }
+};
+
 // Establish Connect //
-mongoose.connect(MONGODB_URL);
+connectDB();
 
 // Connection Events //
 mongoose.connection
